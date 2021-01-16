@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({limit: "30mb", extended: true}));
 app.use(cors());
 
 //connecting the server with mongodb database (mongodb/clous/atlas version)
-const CONNECTION_URL = 'mongodb+srv://user:user123@cluster0.dryuj.mongodb.net/<dbname>?retryWrites=true&w=majority';
+const CONNECTION_URL = `mongodb+srv://user:${process.env.MONGO_PASSWORD}@cluster0.dryuj.mongodb.net/<dbname>?retryWrites=true&w=majority`;
 const PORT = process.env.PORT || 5000;
 
 mongoose.connect(CONNECTION_URL, {useNewUrlParser: true, useUnifiedTopology: true} )
