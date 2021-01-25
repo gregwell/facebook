@@ -13,7 +13,7 @@ export const getPosts = async (req, res) => {
 export const createPost = async (req, res) => {
     const post = req.body;
 
-    const newPost = new PostMessage(post); 
+    const newPost = new PostMessage({...post, creator: req.userId, createdAt: new Date().toISOString()}); 
 
     try {
         await newPost.save();
@@ -54,14 +54,14 @@ export const likePost = async (req, res) => {
 
     const post = await PostMessage.findById(id);
 
-    const index = post.likes.findIndex((id) => id == String(rew.userId));
+    const index = post.likes.findIndex((id) => id == String(req.userId));
 
     if(index=== -1) {
         //like
         post.likes.push(req.userId);
     } else {
         //dislike
-        post.likes = post.likes.filter((id) => id !== String(rew.userId)); 
+        post.likes = post.likes.filter((id) => id !== String(req.userId)); 
         //returns an array of all the likes except current person like
     }
 
