@@ -254,7 +254,7 @@ export default PostMessage;
 
 ### controllers/posts.js
 
-```c
+```jsx
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
@@ -320,7 +320,7 @@ export const signup = async (req,res) => {
 
 ### middleware/auth.js
 
-```c
+```jsx
 import jwt from 'jsonwebtoken';
 
  const auth = async (req, res, next) => {
@@ -450,11 +450,34 @@ Redux is a predictable state container for JavaScript apps
 
 ### public/index.html
 
-- standard html file with only one html tag <div id="root"></div> inside body tags.
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <title>React App</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>
+```
+
+1. Standard html file with only one html tag <div id="root"></div> inside body tags.
 
 ### index.js
 
-```c
+```jsx
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
