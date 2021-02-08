@@ -448,6 +448,40 @@ Redux is a predictable state container for JavaScript apps
 - For example, the browser downloads the HTML along with any referenced JS and CSS (and images, Flash etc.). The browser constructs the DOM from the HTML and renders it using the rules specified in the CSS. JS may manipulate the DOM when the page loads, when the user does something, or when any other event happens. When the DOM changes the browser updates what is displayed.
 - **ReactDOM** is a package that provides DOM specific methods that can be used at the top level of a web app to enable an efficient way of managing DOM elements of the web page.
 
+### What are Hooks?
+
+- provide a more direct API to the React concepts you already know(props, state, context, refs, lifecycle)
+- allow you to **reuse stateful logic** without changing your component hierarchy (stateful logic, **not state itself**)
+- let you "hook into" React state and lifecycle features from function components
+- don't work inside classes - they let you use React without classes
+
+### State Hook
+
+- we call it inside a function component to add some local state to it
+- React will preserve this state between re-renders
+- returns a pair: the current state value and a function that lets you update it
+
+### Effect Hook
+
+- Usual operations performed from React components: data fetching, subscriptions, manually changing the DOM are called "**side effects" (effects)** because **they can affect other components and can't be done during rendering.**
+- One of the few React built-in Hooks is **useEffect.**
+- It adds the ability to perform side effects from a function component.
+
+### ReactRouter:
+
+ReactRouter is a collection of navigational components that compose declaratively with your application. 
+
+- **BrowserRouter**:
+    - is used for doing client side routing with URL segments, so you can load a top level component for each route
+    - this helps separate concerns in your app and makes the logic/data more clear
+    - this kind of client side routing makes your single page app feel more like a traditional webpage/web app.
+    - example: */items/1234* - Load the Item Component and you can get the 1234 which might be an id from react-router and load a resource
+- **Switch**
+    - renders the first child<Route> that matches the location exclusively
+    - using just a bunch of <Route> will render every other component, not worrying that they all belong to other routes
+- **Route**
+    - renders some UI when its path matches the current URL.
+
 ### public/index.html
 
 ```html
@@ -473,7 +507,7 @@ Redux is a predictable state container for JavaScript apps
 </html>
 ```
 
-1. Standard html file with only one html tag <div id="root"></div> inside body tags.
+1. Standard html file with only one root div inside body tags.
 
 ### index.js
 
@@ -518,5 +552,42 @@ const store = createStore(reducers, compose(applyMiddleware(thunk)))
     - placing provider with previously created store inside this render method (and inside the Provider there is the App placed)
     - executing on the document .**getElementById("root")** method
         - in our index.html there is only one element: **<div id="root"></div>**
+
+### App.js
+
+```jsx
+import React from 'react';
+import { Container} from '@material-ui/core';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+
+import Navbar from './components/Navbar/Navbar';
+import Home from './components/Home/Home';
+import Auth from './components/Auth/Auth';
+
+const App = () => (
+    <BrowserRouter>
+        <Container maxWidth="lg">
+            <Navbar/>
+            <Switch>
+                <Route path="/" exact component={Home}/>
+                <Route path="/auth" exact component={Auth}/>
+            </Switch>
+        </Container>
+    </BrowserRouter> 
+);
+
+export default App;
+```
+
+1. Importing Container from @material-ui/core.
+    - Container centers the content horizontally - it's the most basic layout element
+    - The Container width can be bounded by the **maxWidth** property value
+        - lg, md, sm, xl, xs or false (false disables maxWidth)
+2. Importing BrowserRouter, Switch and Route from ReactRouterDOM (ReactRouterDOM - bindings for ReactRouter)
+3. Importing components
+4. Creating tree-structured App, consisting of BrowserRouter → Container → Navbar & Switch (with ReactRouter Routes inside)
+    - using <Route **component**> render method to render the components when their location matches
+
+**Caution**: [ReactRouter docs](https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/api/Route.md#route-render-methods) indicates that the recommend method of rendering something with a <Route> is to use children elements. The version from above is mostly for apps built with earlier versions of the router before hooks were introduced. Try to change it later!
 
 # 3. Further development
