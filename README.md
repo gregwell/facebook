@@ -370,6 +370,88 @@ JWT_SECRET=hiddenSecret
 
 ## Client side
 
+**Questions and answers;**
+
+### What is Redux?
+
+Redux is a predictable state container for JavaScript apps
+
+- **Predictable -** helps to write applications that **behave consistently,** run in different environments(client, server, native) and are **easy to test**
+- **Centralized -** centralizing application's state and logic enables powerful capabilities like **undo/redo**, **state persistence** and much more.
+- **Debuggable -** the Redux DevTools make it easy to trace **when, where and why the application's state changed,** also it enables a possibility do log changes, use "**time-travel debugging",** and even send complete error reports to a server
+- **Flexible -** works with any UI layer, and has a large ecosystem of addons to fit everyone needs
+
+### How to control flow happens in redux?
+
+1. Whenever I want to **replace the state** in the store I have to **dispatch** an **action**
+2. The **action** is caught by one or more **reducers.**
+3. The **reducer/s** create a **new state** that combines the **old state**, and the **dispatched action.**
+4. The **store subscribers** are notified that there is a **new state.**
+
+### What are roles of components/containers/actions/action creators/store in redux?
+
+**Store**
+
+- holds the state
+- when a new action arrives runs the dispatch → middleware → reducers pipeline
+- notifies subscribers when the state is replaced by a new ona
+
+**Components** 
+
+- *dumb* view parts which are not aware of the state directly
+- also called *"presentational components"*
+
+**Containers** (components/containers - a way to structure the app)
+
+- pieces of that view that are aware of the state using react-redux
+- also called *"smart components"* or "*high order components"*
+
+**Actions**
+
+- carries a payload of information from the application to the store
+- are plain JavaScript objects that must have a type attribute to indicate the type of action performed
+
+**Action creators**
+
+- DRY way of creating actions (not strictly necessary)
+
+### What are differences between redux, react-redux, redux-thunk?
+
+**redux** 
+
+- flow with a single store - managing application state
+- independent from React - can be used in whatever environment including vanilla js, react, angular etc.
+
+**react-redux** - bindings between redux and react that:
+
+- creates **containers** (*smart components*) that listen to the store's state
+- prepares the props for
+- rerender the *dumb* **components** (*presentational components)*
+
+**redux-thunk**
+
+- middleware that allows you to write **action creators** that return a function instead of an action
+- the thunk can be used to delay the dispatch of an action or to dispatch only if a certain conditon is met
+- **used mainly for async calls to api,** that dispatch another action on success/failure
+- also logging, crash reporting, routing..
+
+**Additional info:**
+
+- only the minimal data should be put i the state
+- we should add to the state only the values that we want to update when an event happens, and for which we want to make the component re-render.
+
+### What is DOM/ReactDOM
+
+- DOM is a model for structured document
+- it applies to all documents (word documents, HTML pages, XML files)
+- represents the structure of an document in platform/browser independent way
+- For example, the browser downloads the HTML along with any referenced JS and CSS (and images, Flash etc.). The browser constructs the DOM from the HTML and renders it using the rules specified in the CSS. JS may manipulate the DOM when the page loads, when the user does something, or when any other event happens. When the DOM changes the browser updates what is displayed.
+- **ReactDOM** is a package that provides DOM specific methods that can be used at the top level of a web app to enable an efficient way of managing DOM elements of the web page.
+
+### public/index.html
+
+- standard html file with only one html tag <div id="root"></div> inside body tags.
+
 ### index.js
 
 ```c
@@ -393,6 +475,25 @@ const store = createStore(reducers, compose(applyMiddleware(thunk)))
 );
 ```
 
-1. 
+1. Importing **ReactDOM** to gain access for managing DOM elements of a web page.
+2. Importing **Provider** from react-redux. 
+    - The <Provider> makes the Redux store available to any nested components that have been wrapped in the connect() function.
+    - Since any React component in a React Redux app can be connected, most applications will render a <Provider> at the top level, with the entire app's component tree inside of it. **(as in our case).**
+3. Importing redux methods to manage the store
+    - **createStore(reducer, preloadedState**, **enhancer)**
+        - **reducer** - reducers imported from reducers directory(composed from different files into one index.js)
+        - **preloadedState** - the initial state, specified optionally
+        - **enhancer** - specified optionally to enhance the store with third-party capabilities such as middleware, time travel, persistence
+            - **compose()** used to apply multiple store enhancers
+            - **applyMiddleware()** is the only store enhancer that ships with Redux
+            - **thunk as argument -** the middleware from react-thunk that allows us to make async calls to api
+    - the return object is a Store - the object that holds the complete state of the app
+    - the only way to change its state is by dispatching actions.
+    - you may also subscribe to the changes to its state to update the UI
+4. Importing App to put it just inside the **Provider** tags.
+5. Calling render method on ReactDOM to render the website
+    - placing provider with previously created store inside this render method (and inside the Provider there is the App placed)
+    - executing on the document .**getElementById("root")** method
+        - in our index.html there is only one element: **<div id="root"></div>**
 
 # 3. Further development
