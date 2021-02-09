@@ -1,19 +1,19 @@
-# readme[THE FACEBOOK]
+# README [the-facebook]
 
-# 1. Project motivation
+# Project motivation
 
-This is a self-development project that aims to teach me how *people make* awesome websites with the JavaScript. In this way I will get familiarity with good practices and get the general look how project structure should looks like. I've followed line by line the code that has been written and explained by Adrian Hajdin [[github](https://github.com/adrianhajdin/project_mern_memories)][[video](https://youtu.be/ngc9gnGgUdA)]. Later on I googled everything using phrases like "what is {something} used for?", opened countless amounts of stackoverflow questions and took notes, as follows. This project will be the basis for building something bigger on my own.
+This is a self-development project whose main purpose is to teach me how *people develop* awesome websites. I've followed line by line the code that has been written and explained by Adrian Hajdin [[github](https://github.com/adrianhajdin/project_mern_memories)][[video](https://youtu.be/ngc9gnGgUdA)]. Later on I googled everything using phrases like "what is {something} used for?", opened countless amounts of stackoverflow questions and took notes, as follows. This project will be used as the basis for building something bigger on my own.
 
-# 2. The original structure of the project
+# The original structure of the project
 
 ![images/project_structure.png](images/project_structure.png)
 
-## Server side
+# Server side
 
 - A server is software that listens via the internet and responds to incoming requests over HTTP.
 - Server reply to these requests with things like HTML, CSS, JavaScript or raw data encoded in JSON.
 
-### **index.js**
+## **index.js**
 
 ```jsx
 import express from 'express';
@@ -63,7 +63,7 @@ mongoose.set('useFindAndModify', false);
 
     5.4 To opt in to using MongoDB's driver **findOneAndUpdate()** we need to set global option useFindAndModify to false.
 
-### routes/posts.js & routes/users.js (same purpose)
+## routes/posts.js & routes/users.js (same purpose)
 
 ```jsx
 import express from 'express';
@@ -85,7 +85,7 @@ export default router;
 2. **Linking http requests with authorization method and CRUD operations methods**
 3. **Exporting the router to use it in index.js**
 
-### controllers/posts.js
+## controllers/posts.js
 
 ```jsx
 import PostMessage from '../models/postMessage.js';
@@ -220,7 +220,7 @@ export const likePost = async (req, res) => {
         - When the response is other than -1 then we have found the id in the aray, so we have the index. Now we call **filter** method to leave in the array all elements that meet our condition, so all except the one from this request.
     7. Calling **findByIdAndUpdate** method to update the post
 
-### models/postMessage.js & models/user.js (same purpose)
+## models/postMessage.js & models/user.js (same purpose)
 
 ```jsx
 import mongoose from 'mongoose'
@@ -252,7 +252,7 @@ export default PostMessage;
     - **Why we have both schema and model?** A schema represents the structure of a particular document, either completely or just a portion of the document. It's a way to express expected properties and values as well as constraints and indexes. A model defines a programming interface for interacting with the database (read, insert, update, etc). So a schema answers "what will the data in this collection look like?" and a model provides functionality like "Are there any records matching this query?".
 3. **Exporting** created model.
 
-### controllers/posts.js
+## controllers/posts.js
 
 ```jsx
 import bcrypt from 'bcryptjs';
@@ -318,7 +318,7 @@ export const signup = async (req,res) => {
     6. Using **jwt.sign** to create a token.
     7. Returning newly created user and generated token.
 
-### middleware/auth.js
+## middleware/auth.js
 
 ```jsx
 import jwt from 'jsonwebtoken';
@@ -361,16 +361,20 @@ import jwt from 'jsonwebtoken';
 
 To sum up, decoding does not need the secret (remember decoding is just interpreting base64) and verifying/signing is does require it.
 
-### .env
+## .env
 
 ```c
 MONGO_PASSWORD=hiddenPassword
 JWT_SECRET=hiddenSecret
 ```
 
-## Client side
+# Client side
 
-**Questions and answers;**
+## **Questions and answers**
+
+### What is React?
+
+React is a popular library for creating single-page applications (SPAs) that are rendered on the client side. An SPA might have multiple views (aka pages), and unlike conventional multi-page apps, navigating through these views shouldn’t result in the entire page being reloaded.
 
 ### What is Redux?
 
@@ -466,6 +470,11 @@ Redux is a predictable state container for JavaScript apps
 - Usual operations performed from React components: data fetching, subscriptions, manually changing the DOM are called "**side effects" (effects)** because **they can affect other components and can't be done during rendering.**
 - One of the few React built-in Hooks is **useEffect.**
 - It adds the ability to perform side effects from a function component.
+- React will remember the function you passed and call it later after performing the DOM updates. (runs after each render). **But there is a way to change it, by passing a second argument that is the array of values that the effect depends on.**
+
+### What is Routing?
+
+Routing is the process of keeping the browser URL in sync with what’s being rendered on the page. React Router lets you handle routing declaratively.
 
 ### ReactRouter:
 
@@ -482,7 +491,16 @@ ReactRouter is a collection of navigational components that compose declarativel
 - **Route**
     - renders some UI when its path matches the current URL.
 
-### public/index.html
+### History
+
+The history library lets you easily manage session history anywhere JavaScript runs.
+
+- Each <Router> component creates a history object that keeps track of the current location (history.location) and also the previous locations in a stack.
+- When the current location changes, the view is re-rendered and you get a sense of navigation.
+- The `history.push` method is invoked when you click on a `<Link>` component, and `history.replace` is called when you use a `<Redirect>`
+- [more reading](https://www.sitepoint.com/react-router-complete-guide/)
+
+## public/index.html
 
 ```html
 <!DOCTYPE html>
@@ -509,7 +527,7 @@ ReactRouter is a collection of navigational components that compose declarativel
 
 1. Standard html file with only one root div inside body tags.
 
-### index.js
+## index.js
 
 ```jsx
 import React from 'react';
@@ -553,7 +571,7 @@ const store = createStore(reducers, compose(applyMiddleware(thunk)))
     - executing on the document .**getElementById("root")** method
         - in our index.html there is only one element: **<div id="root"></div>**
 
-### App.js
+## App.js
 
 ```jsx
 import React from 'react';
@@ -588,6 +606,122 @@ export default App;
 4. Creating tree-structured App, consisting of BrowserRouter → Container → Navbar & Switch (with ReactRouter Routes inside)
     - using <Route **component**> render method to render the components when their location matches
 
-**Caution**: [ReactRouter docs](https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/api/Route.md#route-render-methods) indicates that the recommend method of rendering something with a <Route> is to use children elements. The version from above is mostly for apps built with earlier versions of the router before hooks were introduced. Try to change it later!
+**Caution**: [ReactRouter docs](https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/api/Route.md#route-render-methods) indicates that the recommend method of rendering something with a <Route> is to use children elements. The version from above is mostly for apps built with earlier versions of the router before hooks were introduced. Try to change it later! 
 
-# 3. Further development
+***PART 1:, without return:***
+
+```jsx
+import React, { useState, useEffect } from 'react';
+import { Link, useHistory, useLocation } from 'react-router-dom';
+import { AppBar, Avatar, Typography, Toolbar, Button } from '@material-ui/core';
+import { useDispatch } from 'react-redux';
+import decode from 'jwt-decode';
+import useStyles from './styles';
+
+const Navbar = () => {
+    const classes = useStyles();
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')));
+    const dispatch = useDispatch();
+    const history = useHistory();
+    const location = useLocation();
+
+    const logout = () => {
+        dispatch({ type: 'LOGOUT' });
+        history.push('/');
+        setUser(null);
+    };
+
+    useEffect(() => {
+        const token = user?.token;
+        if(token) {
+            const decodedToken = decode(token);
+            if(decodedToken.exp * 1000 < new Date().getTime()) logout();
+        }
+        setUser(JSON.parse(localStorage.getItem('profile')));
+    }, [location]);
+      
+        return (
+            //PART 2 : RETURN BODY
+        );
+};
+
+export default Navbar;
+```
+
+1. To focus on the logic behind all that stuff, styling part will be considered later.
+2. Using useState hook to return a stateful value and a function to update it.
+    - during the initial render, the returned state(`user`) is the same as the value passed as the first argument. `JSON.parse(localStorage.getItem('profile'))`.
+    - The `JSON.parse()` method parses a JSON string, constructing the JavaScript value or object described by the string.
+    - The `getItem()` method of the Storage interface, when passed a key name, will return that key's value, or null if the key does not exist, in the given Storage object.
+    - **So we get the logged user profile item from localStorage if there is any, if there isn't null is returned.**
+3. Logout method:
+    1. Dispatching an action type "LOGOUT" to be caught by a reducer
+    2. Using ReactRouter's `useHistory` hook that provides a history interface to change the current location, **and in effect to rerender the view.**
+    3. Setting the user to null because he has been logged out.
+4. Using useEffect hook 
+    - **Passing `[location]` as the second argument to conditionally fire this effect only when the location change.**
+    1. Catching a user token, if there is any
+    2. IF `token` exists:
+        - decoding the `token`
+        - if `token` has expired logging out the user.
+    3. Setting user by parsing the value of profile item from local storage.
+        - if the user exists it can be done successfully, if not the user will be set to null
+
+***PART 2: return body:***
+
+```jsx
+<AppBar className={classes.AppBar} position="static" color="inherit">
+     <div className={classes.brandContainer}>
+        <Typography component={Link} to="/" className={classes.heading} variant="h2" align="center">thefacebook</Typography>
+     </div>
+     <Toolbar className={classes.toolbar}>
+          {user ? (
+             <div className={classes.profile}>
+                <Avatar className={classes.purple} alt={user.result.name} src={user.result.imageUrl}>{user.result.name.charAt(0)}</Avatar>
+                <Typography className={classes.userName} variant="h6">{user.result.name}</Typography>
+                <Button variant="contained" className={classes.logout} color="secondary" onClick={logout}>Logout</Button>
+		         </div>
+          ) : (
+          <Button component={Link} to="/auth" variant="contained" color="primary" >Sing in</Button>
+          )}
+     </Toolbar>
+</AppBar>
+```
+
+Structure: - material-ui components:
+
+**AppBar -** displays information and actions realting to the current screen
+
+**div -** styling
+
+**Typography** - used to present the design and content as clearly as possible 
+
+- **Why Typography?** Too many type sizes and styles at once can spoil any layout. A typographic scale has a limited set of type sizes that work well together along with the layout grid.
+- using ReactRouter **Link** to navigate to "/" (home) of application
+
+**Toolbar -** is a wrapper where you can place elements in a horizontal line (like a tool bet)
+
+**if user is logged (not null)**
+
+**div** - styling
+
+**Avatar** 
+
+- image avatar(alt=name, src=photo src) **OR**
+- letter avatar - by passing a string as `children` + adding styling class
+
+**Typography -** printing user name as `{user.result.name}`
+
+**Button** 
+
+- Contained buttons are high-emphasis, distinguished by their use of elevation and fill. They contain actions that are primary to your app.
+- Executing onClick function `{logout}`
+- Printing Logout string
+
+**if user is not logged in (null)**
+
+**Button**
+
+- providing a link to "/auth" path
+- variant="contained" because it is key function of this page
+- Printing "Sign in" String
