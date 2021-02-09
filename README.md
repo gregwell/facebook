@@ -471,6 +471,7 @@ Redux is a predictable state container for JavaScript apps
 - One of the few React built-in Hooks is **useEffect.**
 - It adds the ability to perform side effects from a function component.
 - React will remember the function you passed and call it later after performing the DOM updates. (runs after each render). **But there is a way to change it, by passing a second argument that is the array of values that the effect depends on.**
+- [a complete guide to useEffect](https://overreacted.io/a-complete-guide-to-useeffect/)
 
 ### What is Routing?
 
@@ -499,6 +500,11 @@ The history library lets you easily manage session history anywhere JavaScript r
 - When the current location changes, the view is re-rendered and you get a sense of navigation.
 - The `history.push` method is invoked when you click on a `<Link>` component, and `history.replace` is called when you use a `<Redirect>`
 - [more reading](https://www.sitepoint.com/react-router-complete-guide/)
+
+### Other resources I find useful
+
+- [Dan Abramov stackoverflow answers](https://stackoverflow.com/users/458193/dan-abramov)
+- 
 
 ## public/index.html
 
@@ -608,6 +614,8 @@ export default App;
 
 **Caution**: [ReactRouter docs](https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/api/Route.md#route-render-methods) indicates that the recommend method of rendering something with a <Route> is to use children elements. The version from above is mostly for apps built with earlier versions of the router before hooks were introduced. Try to change it later! 
 
+## components/Navbar/Navbar.js
+
 ***PART 1:, without return:***
 
 ```jsx
@@ -659,7 +667,7 @@ export default Navbar;
     2. Using ReactRouter's `useHistory` hook that provides a history interface to change the current location, **and in effect to rerender the view.**
     3. Setting the user to null because he has been logged out.
 4. Using useEffect hook 
-    - **Passing `[location]` as the second argument to conditionally fire this effect only when the location change.**
+    - **Passing `[location]` as the second argument to conditionally fire this effect only when the location change.** (by default it runs after each render)
     1. Catching a user token, if there is any
     2. IF `token` exists:
         - decoding the `token`
@@ -725,3 +733,48 @@ Structure: - material-ui components:
 - providing a link to "/auth" path
 - variant="contained" because it is key function of this page
 - Printing "Sign in" String
+
+## components/Home/Home.js
+
+```jsx
+import React, { useState, useEffect } from 'react';
+import { Container, Grow, Grid } from '@material-ui/core';
+import {useDispatch} from 'react-redux';
+import {getPosts} from '../../actions/posts';
+import Posts from '../Posts/Posts';
+import Form from '../Form/Form';
+
+const Home = () => {
+    const [currentId, setCurrentId] = useState(null);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getPosts());
+    }, [currentId, dispatch]);
+
+    return (
+        <Grow in>
+        <Container>
+            <Grid container justify="space-between" alignItems="stretch" spacing={3}>
+                <Grid item xs={12} sm={7}>
+                    <Posts setCurrentId={setCurrentId}/>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <Form currentId={currentId} setCurrentId={setCurrentId}/>
+                </Grid>
+            </Grid>
+        </Container>
+    </Grow>
+    );
+}
+export default Home;
+```
+
+1. Defining state hook for `currentId` with initial value: `null`
+2. Using **useEffect** hook
+    - dispatching fetched posts (using `getPosts()` method from actions/posts.js)
+    - only re-run the effect if `currentId` changed
+
+    [https://overreacted.io/a-complete-guide-to-useeffect/](https://overreacted.io/a-complete-guide-to-useeffect/)
+
+    [https://reactjs.org/docs/thinking-in-react.html#step-3-identify-the-minimal-but-complete-representation-of-ui-state](https://reactjs.org/docs/thinking-in-react.html#step-3-identify-the-minimal-but-complete-representation-of-ui-state)
