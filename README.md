@@ -1,4 +1,4 @@
-# The Facebook
+# The Facebook - project analysis
 
 # Project motivation
 
