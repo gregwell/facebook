@@ -2,7 +2,7 @@
 
 # Project motivation
 
-The main purpose of this self-development project is to give me an overview of a typical React project and how *the real development process* looks like. The project uses MERN stack technologies (MongoDB, Express, React, Node.js)
+The main purpose of this self-development project is to give me an overview of a typical React-powered project and let me see how *the real development process* looks like from scratch. The project uses MERN stack technologies (MongoDB, Express, React, Node.js)
 
 I've followed line by line Adrian Hajdin's [tutorial code](https://github.com/adrianhajdin/project_mern_memories), then googled "what is *everything* used for?", opened countless amounts of stackoverflow questions and took [notes](https://github.com/gregwell/university-notes/tree/main/english/javascript). This README file shows my way of thinking **how things are done.**
 
