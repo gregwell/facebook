@@ -1,6 +1,6 @@
 # The Facebook - project analysis
 
-# Project motivation
+# Motivation
 
 The main purpose of this self-development project is to give me an overview of a typical React-powered project and let me see how *the real development process* looks like from scratch. The project uses MERN stack technologies (MongoDB, Express, React, Node.js)
 
