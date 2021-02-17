@@ -482,7 +482,7 @@ export default App;
 
 ## components/Navbar/Navbar.js
 
-***PART 1:, without return:***
+***PART 1:***
 
 ```jsx
 import React, { useState, useEffect } from 'react';
@@ -515,7 +515,7 @@ const Navbar = () => {
     }, [location]);
       
         return (
-            //PART 2 : RETURN BODY
+            //PART 2 : rendering DOM elements
         );
 };
 
@@ -541,7 +541,7 @@ export default Navbar;
     3. Setting user by parsing the value of profile item from local storage.
         - if the user exists it can be done successfully, if not the user will be set to null
 
-***PART 2: return body:***
+***PART 2: rendering DOM elements***
 
 ```jsx
 <AppBar className={classes.AppBar} position="static" color="inherit">
@@ -562,45 +562,29 @@ export default Navbar;
 </AppBar>
 ```
 
-Structure: - material-ui components:
-
-**AppBar -** displays information and actions realting to the current screen
-
-**div -** styling
-
-**Typography** - used to present the design and content as clearly as possible 
-
-- **Why Typography?** Too many type sizes and styles at once can spoil any layout. A typographic scale has a limited set of type sizes that work well together along with the layout grid.
-- using ReactRouter **Link** to navigate to "/" (home) of application
-
-**Toolbar -** is a wrapper where you can place elements in a horizontal line (like a tool bet)
-
-**if user is logged (not null)**
-
-**div** - styling
-
-**Avatar** 
-
-- image avatar(alt=name, src=photo src) **OR**
-- letter avatar - by passing a string as `children` + adding styling class
-
-**Typography -** printing user name as `{user.result.name}`
-
-**Button** 
-
-- Contained buttons are high-emphasis, distinguished by their use of elevation and fill. They contain actions that are primary to your app.
-- Executing onClick function `{logout}`
-- Printing Logout string
-
-**if user is not logged in (null)**
-
-**Button**
-
-- providing a link to "/auth" path
-- variant="contained" because it is key function of this page
-- Printing "Sign in" String
+1. Using the following material-ui components:
+    - *AppBar* **-** displays information and actions relating to the current screen
+    - *Typography* **-**  used to present the design and the content as clearly as possible
+        - Why Typography? ****Too many type sizes and styles at once can spoil any layout. A typographic scale has a limited set of type sizes that work well together along with the layout grid.
+    - *Toolbar* **-** is a wrapper where you can place elements in a horizontal line (like a tool bet)
+2. Using *div* component for styling.
+3. Using ReactRouter *Link* ****to navigate to "/" (home) of application inside Typography component. 
+4. If user is logged in:
+    1. Displaying image avatar or letter avatar if the image doesn't exist.
+        - image avatar - by specifying alt=name and src=photoSrc
+        - letter avatar - by passing a string as `children` + adding styling class
+    2. Printing user name as `{user.result.name}`
+    3. Displaying a logout button
+        - *contained* - contained buttons are high-emphasis, distinguished by their use of elevation and fill; contain actions that are primary for application to work.
+        - *onClick* - executing `logout` function
+5. If user is not logged in:
+    1. Displaying a sign in button
+        - Providing a ReactRouter *Link* to navigate to *Auth* page
+        - *contained* - because of it key function.
 
 ## components/Home/Home.js
+
+***PART 1:***
 
 ```jsx
 import React, { useState, useEffect } from 'react';
@@ -619,18 +603,7 @@ const Home = () => {
     }, [currentId, dispatch]);
 
     return (
-        <Grow in>
-        <Container>
-            <Grid container justify="space-between" alignItems="stretch" spacing={3}>
-                <Grid item xs={12} sm={7}>
-                    <Posts setCurrentId={setCurrentId}/>
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                    <Form currentId={currentId} setCurrentId={setCurrentId}/>
-                </Grid>
-            </Grid>
-        </Container>
-    </Grow>
+				//PART 2 : rendering DOM elements
     );
 }
 export default Home;
@@ -670,6 +643,36 @@ export default Home;
 
         - returning only the payload.
 
+***PART 2: rendering DOM elements***
+
+```jsx
+        <Grow in>
+        <Container>
+            <Grid container justify="space-between" alignItems="stretch" spacing={3}>
+                <Grid item xs={12} sm={7}>
+                    <Posts setCurrentId={setCurrentId}/>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <Form currentId={currentId} setCurrentId={setCurrentId}/>
+                </Grid>
+            </Grid>
+        </Container>
+    </Grow>
+```
+
+1. Using the following material-ui components:
+    - **Grow** - a single child component, props:
+        - ***in*** - if true, show the component; triggers the enter or exit animation.
+    - **Container** - centers the content horizontally
+    - **Grid** - adapts to screen size and orientation, ensuring consistency across layouts.
+        - ***container*/*item*** - two types of a grid
+        - ***spacing***
+            - the responsive grid focuses on consistent spacing widths, rather than column width
+            - from 0 to 10, where each integer is 8px.
+        - ***alignItems*** - ***stretch*** stretches cells from the top to the bottom
+        - ***justify* - *space-between***
+2. Sending the `currentId` as argument to the Posts and Form components functions.
+
 ### components/Posts.js
 
 ```jsx
@@ -685,7 +688,7 @@ const Posts = ({currentId, setCurrentId}) => {
     const posts = useSelector((state) => state.posts )
     const classes = useStyles();
 
-console.log(posts);
+		console.log(posts);
 
     return (
         //CircularProgress - loading spinner
