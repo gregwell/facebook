@@ -639,36 +639,74 @@ export default Home;
 1. Defining state hook for `currentId` with initial value: `null`
 2. Using **useEffect** hook
     - dispatching fetched posts (using `getPosts()` method from actions/posts.js)
-    - only re-run the effect if `currentId` has changed, or dispatch change (why would it change?)
+    - only re-run the effect if `currentId` has changed, or ~~dispatch change (why would it change?)~~ **React guarantees the dispatch function to be constant throughout the component lifetime, but we can still specify it.**
 
-    To understand the logic behind this useEffect I will show the action from actions/posts.js 
+        To understand the logic behind this useEffect we need to dive in the dispatched function
 
-    ```jsx
-    export const getPosts = () => async(dispatch) => {
-        try {
-            const { data } = await api.fetchPosts();  
-            return dispatch({type: FETCH_ALL, payload: data});
-        } catch (error) {
-            console.log(error.message);
+        ```jsx
+        export const getPosts = () => async(dispatch) => {
+            try {
+                const { data } = await api.fetchPosts();  
+                return dispatch({type: FETCH_ALL, payload: data});
+            } catch (error) {
+                console.log(error.message);
+            }
         }
-    }
-    ```
+        ```
 
-    - using redux to patch or dispatch an action from the data from our backend
+        - using redux (**TS:** **where exactly?**) to patch or dispatch an action from the data from our backend
+            1. fetching data from the backend with an asynchronous api.fetchPosts() method.
+            2. returning dispatch with the type FETCH_ALL and the fetched data as payload
 
-    And the reducer in *reducers/posts.js* for FETCH_ALL case:
+        The reducer in *reducers/posts.js :*
 
-    ```jsx
-    export default (posts = [], action) => {
-        switch (action.type) {
-            case FETCH_ALL:
-                return action.payload;
-    				case ...
-    ```
+        ```jsx
+        export default (posts = [], action) => {
+            switch (action.type) {
+                case FETCH_ALL:
+                    return action.payload;
+        				case ...
+        ```
 
-    - the reducer get state=posts=[], and action=action
+        - returning only the payload.
 
-    ### TO DO:
+### components/Posts.js
 
-    1. Change the rendering method for <Route> in ReactRouter to use children elements, as the ReactRouter v5 docs recommends.
-    2. Study the differences in react state flow with and without redux.
+```jsx
+import React from 'react';
+import { Grid, CircularProgress } from '@material-ui/core';
+import { useSelector } from 'react-redux';
+
+import Post from './Post/Post';
+
+import useStyles from './styles';
+
+const Posts = ({currentId, setCurrentId}) => {
+    const posts = useSelector((state) => state.posts )
+    const classes = useStyles();
+
+console.log(posts);
+
+    return (
+        //CircularProgress - loading spinner
+        !posts.length ? < CircularProgress /> : (
+            <Grid className={classes.actionDiv.container} container alignItems="stretch" spacing={3}>
+                 {posts.map((post) => (
+                     <Grid key={post._id} item xs={12} sm={6}>
+                        <Post post={post} setCurrentId={setCurrentId}/>
+                    </Grid>
+                 ))}
+            </Grid>
+        )
+    );
+}
+
+export default Posts;
+```
+
+to read: use selector: [https://react-redux.js.org/api/hooks](https://react-redux.js.org/api/hooks)
+
+### TO DO:
+
+1. Change the rendering method for <Route> in ReactRouter to use children elements, as the ReactRouter v5 docs recommends.
+2. Study the differences in react state flow with and without redux.
