@@ -4,7 +4,7 @@
 
 The main purpose of this self-development project is to give me an overview of a typical React-powered project and let me see how *the real development process* looks like from scratch. The project uses MERN stack technologies (MongoDB, Express, React, Node.js)
 
-I've followed line by line Adrian Hajdin's [tutorial code](https://github.com/adrianhajdin/project_mern_memories), then googled "what is *everything* used for?", opened countless amounts of stackoverflow questions and took [notes](https://github.com/gregwell/university-notes/tree/main/english/javascript). This README file shows my way of thinking **how things are done.**
+I've followed line by line Adrian Hajdin's [tutorial code](https://github.com/adrianhajdin/project_mern_memories), then googled "what is *everything* used for?", opened countless amounts of stackoverflow questions and [took notes](https://github.com/gregwell/university-notes/tree/main/english/javascript). This README file shows my way of thinking **how things are done.**
 
 # The original structure of the project
 
@@ -563,20 +563,20 @@ export default Navbar;
 ```
 
 1. Using the following material-ui components:
-    - *AppBar* **-** displays information and actions relating to the current screen
-    - *Typography* **-**  used to present the design and the content as clearly as possible
+    - **AppBar -** displays information and actions relating to the current screen
+    - **Typography -**  used to present the design and the content as clearly as possible
         - Why Typography? ****Too many type sizes and styles at once can spoil any layout. A typographic scale has a limited set of type sizes that work well together along with the layout grid.
-    - *Toolbar* **-** is a wrapper where you can place elements in a horizontal line (like a tool bet)
-2. Using *div* component for styling.
-3. Using ReactRouter *Link* ****to navigate to "/" (home) of application inside Typography component. 
+    - **Toolbar -** is a wrapper where you can place elements in a horizontal line (like a tool bet)
+2. Using **div** component for styling.
+3. Using ReactRouter **Link** to navigate to "/" (home) of application inside Typography component. 
 4. If user is logged in:
     1. Displaying image avatar or letter avatar if the image doesn't exist.
         - image avatar - by specifying alt=name and src=photoSrc
         - letter avatar - by passing a string as `children` + adding styling class
     2. Printing user name as `{user.result.name}`
     3. Displaying a logout button
-        - *contained* - contained buttons are high-emphasis, distinguished by their use of elevation and fill; contain actions that are primary for application to work.
-        - *onClick* - executing `logout` function
+        - **contained** - contained buttons are high-emphasis, distinguished by their use of elevation and fill; contain actions that are primary for application to work.
+        - **onClick** - executing `logout` function
 5. If user is not logged in:
     1. Displaying a sign in button
         - Providing a ReactRouter *Link* to navigate to *Auth* page
@@ -675,39 +675,177 @@ export default Home;
 
 ### components/Posts.js
 
+***PART 1:***
+
 ```jsx
 import React from 'react';
 import { Grid, CircularProgress } from '@material-ui/core';
 import { useSelector } from 'react-redux';
-
 import Post from './Post/Post';
-
 import useStyles from './styles';
 
 const Posts = ({currentId, setCurrentId}) => {
-    const posts = useSelector((state) => state.posts )
+    const posts = useSelector((state) => state.posts)
     const classes = useStyles();
 
 		console.log(posts);
 
     return (
-        //CircularProgress - loading spinner
-        !posts.length ? < CircularProgress /> : (
-            <Grid className={classes.actionDiv.container} container alignItems="stretch" spacing={3}>
-                 {posts.map((post) => (
-                     <Grid key={post._id} item xs={12} sm={6}>
-                        <Post post={post} setCurrentId={setCurrentId}/>
-                    </Grid>
-                 ))}
-            </Grid>
-        )
+					//PART 2: rendering DOM elements
     );
 }
 
 export default Posts;
 ```
 
-to read: use selector: [https://react-redux.js.org/api/hooks](https://react-redux.js.org/api/hooks)
+1. Posts function component receive `currentId` and `setCurrentId` as props.
+2. Using `useSelector` to get the entire Redux store state as a parameter and return only the posts state.
+
+***PART 2: rendering DOM elements***
+
+```jsx
+!posts.length ? < CircularProgress /> : (
+	 <Grid className={classes.actionDiv.container} container alignItems="stretch" spacing={3}>
+     {posts.map((post) => (
+        <Grid key={post._id} item xs={12} sm={6}>
+           <Post post={post} setCurrentId={setCurrentId}/>
+        </Grid>
+      ))}
+   </Grid>
+)
+```
+
+1. If the posts doesn't consist of any posts yet printing the `CircularProgress` material-ui component.
+2. Iterating through each post in `posts` and rendering for it a distinct **Grid** component with the **key**  equal to `post._id`. 
+3. Inside this **Grid** rendering the post itself (the logic and DOM structure from **post.js** file)
+
+### components/Post.js
+
+***PART 1:***
+
+```jsx
+import React from 'react';
+import {Card, CardActions, CardContent, CardMedia, Button, Typography} from '@material-ui/core';
+import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
+import ThumbUpAltOutlined from '@material-ui/icons/ThumbUpAltOutlined';
+import DeleteIcon from '@material-ui/icons/Delete';
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import moment from 'moment';
+import useStyles from './styles';
+import { useDispatch } from 'react-redux';
+
+import {deletePost, likePost} from '../../../actions/posts';
+
+const Post = ({ post, setCurrentId }) => {
+    const classes = useStyles();
+    const dispatch = useDispatch();
+    const user = JSON.parse(localStorage.getItem('profile'));
+
+    const Likes = () => {
+        if (post.likes.length > 0) {
+          return post.likes.find((like) => like === (user?.result?.googleId || user?.result?._id))
+            ? (
+              <><ThumbUpAltIcon fontSize="small" />&nbsp;{post.likes.length > 2 ? `You and ${post.likes.length - 1} others` : `${post.likes.length} like${post.likes.length > 1 ? 's' : ''}` }</>
+            ) : (
+              <><ThumbUpAltOutlined fontSize="small" />&nbsp;{post.likes.length} {post.likes.length === 1 ? 'Like' : 'Likes'}</>
+            );
+        }
+    
+        return <><ThumbUpAltOutlined fontSize="small" />&nbsp;Like</>;
+      };
+
+    return (
+       //PART 2: rendering DOM elements
+    );
+}
+
+export default Post;
+```
+
+1. Parsing user profile from local storage and assigning it to a const.
+2. Defining the function to handle showing likes - this function works as separate React component.
+    - If `post.likes` array is not empty (this array consists of ids users who likes this post):
+        - If the id of current user is in the `post.likes` array:
+            - using **ThumbUpAltIcon** to show appropriate string who liked the post
+        - If the id of current user isn't in `post.likes` array
+            - using **ThumbUpAltOutlined** to show anyway who liked the post
+    - if the `post.likes` array is empty then simply showing *Like*.
+
+***PART 2: rendering DOM elements***
+
+```jsx
+ <Card className = {classes.card}>
+            <CardMedia className = {classes.media} image={post.selectedFile} title={post.title} />
+            <div className={classes.overlay}>
+                <Typography variant="h6">{post.name}</Typography>
+                <Typography variant="body2">{moment(post.createdAt).fromNow()}</Typography>
+            </div>
+            {(user?.result?.googleId === post?.creator || user?.result?._id === post?.creator ) && (
+                <div className={classes.overlay2}>
+                <Button style={{color: 'white'}} size="small" onClick={() => setCurrentId(post._id)}> 
+                    <MoreHorizIcon fontSize="default" />
+                </Button>
+            </div>
+            )}
+            <div className={classes.details}>
+                <Typography variant="body2" color="textSecondary">{post.tags.map((tag)=> `#${tag} `)}</Typography>
+            </div>
+            <Typography className={classes.title} variant="h5" gutterBottom> {post.title} </Typography>
+            <CardContent>
+                <Typography variant="body2" color="textSecondary" component="p"> {post.message} </Typography>
+            </CardContent>
+            <CardActions className={classes.cardActions}>
+                <Button size="small" color="primary" disabled={!user?.result} onClick={() =>dispatch(likePost(post._id)) }>
+                    <Likes />
+                </Button>
+                {(user?.result?.googleId === post?.creator || user?.result?._id === post?.creator ) && (
+                    <Button size="small" color="primary" onClick={() => dispatch(deletePost(post._id)) }>
+                        <DeleteIcon fontSize="small" /> Delete
+                    </Button>
+                )}
+            </CardActions>
+        </Card>
+```
+
+1. Using the following material-ui components:
+    - **Card** - cards contain content and actions about a single subject.
+    - **CardMedia** *image*: image to be displayed as a background image
+    - **MoreHorizIcon -** three dots icon
+    - **CardContent**
+    - **CardActions**
+
+2. Displaying background image with **CardMedia** component
+
+3. Creating div with relevant styling and two **Typography** components inside. 
+
+- the first one shows the post creator: `post.createdAt`
+- the second one shows how long ago the post was created: `moment(post.createdAt).fromNow()`
+
+4. If the user id fetched from the local storage (`googleId` or `_id`) is equal to the id of the post creator:
+
+- showing the button with **no text inside**, but with a children: **MoreHorizIcon**
+- onClick calls `setCurrentId` state setter function with the `post._id`.
+- **IMPORTANT INFO regarding currentId state:**
+    - the new state variable:  `const [currentId, setCurrentId] = useState(null);` is defined in **home.js.**
+    - The state (`post._id`) that is set here can be used later just in the form. We expect being able to immediately edit the post data after clicking this button, so somehow the Form component gets the `currentId` that is in our case the currently edited post id.
+    - This is because our state is set globally and each component can access it - **is this provided by Hooks or redux play any role here? [to answer later]**
+
+5. Creating a **div** with a **Typography** component where for each post tag we print it separately preceded by hashtag `post.tags.map((tag)=> `#${tag} `)`.
+
+6. Creating a **Typography** component to print the `post.title`.
+
+7. Creating a **CardContent** component with a **Typography** as children for printing `post.message`.
+
+8. Creating the button to like posts 
+
+- the button is clickable only when someone is signed in thanks to disabled property: `disabled={!user?.result}`
+- onClick runs a dispatch function with likePost function `dispatch(likePost(post._id)`
+- the children of this button is our **Likes** component that deals with printing the relevant count of likes.
+
+9.  If the user id fetched from the local storage (`googleId` or `_id`) is equal to the id of the post creator:
+
+- creating Button dispatching **deletePost** action with the current post id.
+- inside this button instead of text putting **DeleteIcon**
 
 ### TO DO:
 
