@@ -719,7 +719,7 @@ export default Posts;
 2. Iterating through each post in `posts` and rendering for it a distinct **Grid** component with the **key**  equal to `post._id`. 
 3. Inside this **Grid** rendering the post itself (the logic and DOM structure from **post.js** file)
 
-### components/Post.js
+## components/Post.js
 
 ***PART 1:***
 
@@ -846,6 +846,122 @@ export default Post;
 
 - creating Button dispatching **deletePost** action with the current post id.
 - inside this button instead of text putting **DeleteIcon**
+
+### components/Form.js
+
+***PART 1:***
+
+```jsx
+import React, { useState, useEffect } from 'react';
+import { TextField, Button, Typography, Paper } from '@material-ui/core';
+import FileBase from 'react-file-base64';
+import {useDispatch, useSelector} from 'react-redux';
+import useStyles from './styles';
+import {createPost, updatePost} from '../../actions/posts' 
+
+const Form = ({currentId, setCurrentId}) => {
+    const [postData, setPostData] = useState({ title: '', message: '', tags: '', selectedFile: '' });
+    const post = useSelector((state) => currentId ? state.posts.find((p) => p._id===currentId) : null);
+    const classes = useStyles();
+    const dispatch = useDispatch();
+    const user = JSON.parse(localStorage.getItem('profile'));
+
+    useEffect(() => {
+        if(post) setPostData(post);
+    }, [post] )
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        if(currentId) {
+            dispatch(updatePost(currentId, {...postData, name:user?.result?.name }));
+        } else {
+            dispatch(createPost({...postData, name:user?.result?.name }));
+        }
+        clear();
+    }
+
+    if(!user?.result?.name) {
+        return (
+            <Paper className={classes.paper}>
+                <Typography variant="h6" align="center">
+                    Please sign in to create your own post or like others.
+                </Typography>
+            </Paper>
+        )
+    }
+
+    const clear = () => {
+        setCurrentId(null);
+        setPostData({ title: '', message: '', tags: '', selectedFile: '' });
+    }
+
+    return (
+				// **PART 2: rendering DOM elements**
+    );
+}  
+
+export default Form;
+```
+
+1. The Form component takes currentId and setCurrentId as props
+2. Defining postData state with useState hook.
+3. Using `useSelector` to get the entire Redux store state as a parameter
+    - if **currentId** state exists, then return the state of the post with the id of **currentId**
+    - otherwise return null
+4. Defining dispatch.
+5. Defining user: getting user profile from local storage.
+6. Using `useEffect` hook to populate the values of the form
+    - the callback function run when **the post value changes from nothing to something**
+7. handleSubmit function:
+    - preventing default (**what is default?)**
+    - if **currentId** exists, then dispatching an action: calling updatePost method from actions
+
+    ```jsx
+    export const updatePost = (id, post) => async (dispatch) => {
+        try {
+            const {data} = await api.updatePost(id,post);
+            dispatch({type: UPDATE, payload: data});
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    ```
+
+    - the updatePost method calls api.updatePost to get the updated post, then dispatching an action with `UPDATE` type
+    - if **currentId** does not exist, then dispatching an action to createPost: calling createPost methods from actions
+    - clearing the form data (external function: calling **setCurrentId = null** and **setPostData** to contain nothing.
+8. If there is no `user?.result?.name` returning **Paper** component with a **Typography** informing that only logged users can create or like posts.
+
+***PART 2: rendering DOM elements***
+
+```jsx
+<Paper className = { classes.paper} >
+    <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit = {handleSubmit} >
+      <Typography variant="h6">{currentId ? 'Editing' : 'Creating'} a post</Typography>
+      <TextField  name="title" variant="outlined" label ="Title" fullWidth value={postData.title} onChange={(e) => setPostData({...postData, title: e.target.value})}/>
+      <TextField  name="message" variant="outlined" label ="Message" fullWidth value={postData.message} onChange={(e) => setPostData({...postData, message: e.target.value})}/>
+      <TextField  name="tags" variant="outlined" label ="Tags" fullWidth value={postData.tags} onChange={(e) => setPostData({...postData, tags: e.target.value.split(',')})}/>
+      <div className={classes.fileInput}> <FileBase type="file" multiple={false} onDone={({ base64 }) => setPostData({ ...postData, selectedFile: base64})}/></div>
+      <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
+      <Button variant="contained" color="secondary" size="small" onClick={clear} fullWidth>Clear</Button>
+    </form>
+</Paper>
+```
+
+1. Using **Paper** material-ui component
+    - **paper** component - the flat, opaque texture of a sheet of paper, an app's behavior mimics paper's ability to be re-sized, shuffled and bound together in multiple sheets.
+2. Creating form with onSubmit function **handleSubmit**
+3. Showing form description with **Typography** component.
+    - if **currentId** (from Form component props) exists then showing *editing*, otherwise *Creating*
+4. Showing three text fields, each of them onChange run setPostData method, spread all values and replace the one from this text field
+5. Using **FileBase** component imported from *react-file-base64* to convert the requested image to base64
+    - surrounding this component with a simple div for styling
+    - when converting is done running setPostData, spreading all values and replacing *selectedFile.*
+6. Using "submit" type button to allow submitting the form.
+7. The last button allows for clearing the data, simply execute **onClick** function `clear`.
+
+**Ideas: React brainstorming, draw all Hooks used in all files linked to these files to see the state flow.**
 
 ### TO DO:
 
