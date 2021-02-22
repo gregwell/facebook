@@ -8,7 +8,7 @@ I've followed line by line Adrian Hajdin's [tutorial code](https://github.com/ad
 
 # The original structure of the project
 
-![images/project_structure.png](images/project_structure.png)
+![https://raw.githubusercontent.com/gregwell/the-facebook/master/images/project_structure.png](https://raw.githubusercontent.com/gregwell/the-facebook/master/images/project_structure.png)
 
 # Server side
 
@@ -673,7 +673,7 @@ export default Home;
         - ***justify* - *space-between***
 2. Sending the `currentId` as argument to the Posts and Form components functions.
 
-### components/Posts.js
+## components/Posts.js
 
 ***PART 1:***
 
@@ -847,7 +847,7 @@ export default Post;
 - creating Button dispatching **deletePost** action with the current post id.
 - inside this button instead of text putting **DeleteIcon**
 
-### components/Form.js
+## components/Form.js
 
 ***PART 1:***
 
@@ -961,7 +961,277 @@ export default Form;
 6. Using "submit" type button to allow submitting the form.
 7. The last button allows for clearing the data, simply execute **onClick** function `clear`.
 
-**Ideas: React brainstorming, draw all Hooks used in all files linked to these files to see the state flow.**
+## components/Auth/Auth.js
+
+***PART 1:***
+
+```jsx
+import React, { useState } from 'react'
+import { Avatar, Button, Paper, Grid, Typography, Container } from '@material-ui/core';
+import { GoogleLogin } from 'react-google-login';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import useStyles from './styles';
+import Input from './Input';
+import Icon from './icon';
+import { signin, signup } from '../../actions/auth';
+
+const initialState = { firstName: '', lastName: '', email: '', password: '', confirmPassword: '' };
+
+const Auth = () => {
+
+    const classes = useStyles();
+    const [showPassword, setShowPassword] = useState(false);
+    const [isSignup, setIsSignup] = useState(false);
+    const [formData, setFormData] = useState(initialState);
+    const dispatch = useDispatch();
+    const history = useHistory();
+
+    const handleShowPassword = ()  => setShowPassword((prevShowPassword) => !prevShowPassword); //toggling on/off
+
+    const handleSubmit= (e) => {
+        e.preventDefault();
+        console.log(formData);
+
+        if (isSignup) {
+            dispatch(signup(formData, history)) 
+        } else {
+            dispatch(signin(formData, history)) 
+        }
+        
+    };
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value }) 
+    }
+
+    const switchMode = () => {
+        setIsSignup((prevIsSignup) => !prevIsSignup);
+        setShowPassword(false);
+    }
+
+    const googleSuccess = async (res) => {
+        const result = res?.profileObj; // only . would give an error when we dont have res, ?. is error free, just say undefined if this is case
+        const token = res?.tokenId;
+
+        try {
+            dispatch({ type: 'AUTH', data: { result, token } });
+            history.push('/');
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const googleFailure = (error) => {
+        console.log(error);
+        console.log('google sign in was unsuccesful. try again later');
+    }
+
+    return (
+					//***PART 2: rendering DOM elements***
+    )
+}
+
+export default Auth
+```
+
+1. Creating a bunch of new states: **showPassword, isSignup, formData** with some initial states: empty strings or false bools.
+2. Defining history and dispatch hooks variables.
+3. Defining a function to handle show password operation: 
+    - `setShowPassword((prevShowPassword) => !prevShowPassword);` - toggling states from false to true and from true to false.
+4. Defining a function to handle submit button
+    - preventing default
+    - if isSignup state is true then **dispatching a `signup`** function with `formData` and `history` as props (**what is history used for?)**
+    - if isSignup state is false, then dispatching a `signin` function.
+5. Defining a function to handle formData change 
+    - using `setFormData` to change currently used values
+6. Defining a function to handle toggling between sign up and sign in.
+    - toggling states from false to true and from true to false.
+    - setting `showPassword`state to false
+7. Handling google login success:
+    - obtaining user profile from `res?.profileObj`
+    - obtaining user token `res?.tokenId`
+    - dispatching an action type:'AUTH', data: {result, token})
+    - pushing the homepage '/' to the history, so changing the rendered dom elements to these in Home.js file.
+8. Handling google login error - logging an error.
+
+***PART 2: rendering DOM elements***
+
+```jsx
+        <Container component="main" maxWidth="xs">
+            <Paper className={classes.paper} elevation={3}>
+                <Avatar className={classes.avatar}>
+                    <LockOutlinedIcon />
+                </Avatar>
+                <Typography variant="h5">{isSignup ? 'Sign up' : 'Sign in'}</Typography>
+                <form className={classes.form} onSubmit={handleSubmit}>
+                    <Grid container spacing={2}>
+                        { isSignup && (
+                        <>
+                            <Input name="firstName" label="First Name" handleChange={handleChange} autoFocus half/>
+                            <Input name="lastName" label="Last Name" handleChange={handleChange} autoFocus half/>
+                        </>
+                        )}
+                        <Input name="email" label="Email Address" handleChange={handleChange} type="email"/>
+                        <Input name="password" label="Password" handleChange={handleChange} type={showPassword ? "text" : "password"} handleShowPassword={handleShowPassword}/>
+                        { isSignup && <Input name="confirmPassword" label="Repeat Password" handleChange={handleChange} type="password"/> }
+                    </Grid>
+                    <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+                        {isSignup ? 'Sign Up' : 'Sign in'}
+                    </Button>
+                    <GoogleLogin
+                        clientId="googleClientId-change it to env variable later!" 
+                        render={(renderProps) => (
+                            <Button className={classes.googleButton} color="primary" fullWidth onClick={renderProps.onClick} disabled={renderProps.disabled} startIcon={<Icon/>} variant="contained">
+                                Google Sign In
+                            </Button>
+                        )}
+                        onSuccess={googleSuccess}
+                        onFailure={googleFailure}
+                        cookiePolicy="single_host_origin"
+                    />
+                    <Grid container justify="flex-end">
+                        <Grid item>
+                            <Button onClick={switchMode}>
+                                { isSignup ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </form>
+            </Paper>
+        </Container>
+```
+
+1. Creating a new container with a paper component inside.
+2. Showing an icon corresponding the log in operation
+3. Displaying *Sign up* or *Sign in* **Typography** depending on the isSignup state.
+4. Creating a form with **onSubmit** method: `handleSubmit`
+5. Creating **Grid** container
+6. Depending on the isSignup state showing five(firstName, lastName, email, password, confirmPassword) Input components or only two: email and password when isSignup = false.
+    - each Input component run handleChange method: `handleChange={handleChange}`
+7. Creating **Grid** component with a **submit** type **Button** with a text dependent on isSignupState
+8. Creating **GoogleLogin** component
+    - pasting `clientId` from google developers website and assigning it to the variable
+    - defining render method with `renderProps` this method renders the **Button** with**:**
+        - `onClick: {renderProps.onClick}`
+        - `disabled: {renderProps.disabled}`
+        - `startIcon={<Icon/>}`
+        - text inside: Google Sign In
+    - calling **onSuccess** and **onFailure** external methods.
+    - setting cookiePolicy: `cookiePolicy="single_host_origin"`
+9. Creating a **Grid** container with a **Grid** item with **Button** as children. The button:
+    - executes **onClick** function `switchMode`
+    - shows different text depending on isSignup state
+
+## components/Auth/input.js
+
+```jsx
+import React from 'react'
+import { TextField, Grid, InputAdornment, IconButton } from '@material-ui/core';
+import Visibility from '@material-ui/icons/Visibility'
+import VisibilityOff from '@material-ui/icons/VisibilityOff'
+
+const Input = ({ name, handleChange, label, half, autoFocus, type, handleShowPassword}) => {
+    return (
+        <Grid item xs={12} sm={half ? 6 : 12} >
+            <TextField
+                name={name}
+                onChange={handleChange}
+                variant="outlined"
+                required
+                fullWidth
+                label={label}
+                autoFocus={autoFocus}
+                type={type}
+                InputProps={name === 'password' ? {
+                    endAdornment: (
+                        <InputAdornment position="end">
+                            <IconButton onClick={handleShowPassword}>
+                                {type === "password" ? <Visibility/> : <VisibilityOff/>}
+                            </IconButton>
+                        </InputAdornment>
+                    )
+                } : null}
+            />
+        </Grid>
+    )
+}
+
+export default Input
+```
+
+1. Defining custom React component consisting of a **Grid** and a **TextField** components.
+2. The component takes as props an array consisting of 7 variables.
+
+## actions/posts.js
+
+```jsx
+import * as api from '../api';
+import {FETCH_ALL, CREATE, UPDATE, DELETE} from '../constants/actionTypes';
+
+export const getPosts = () => async(dispatch) => {
+
+    try {
+        //Using redux to patch or dispatch an action from the data from our backend
+        //{data} because we get response from api and inside api we have an object
+        const { data } = await api.fetchPosts();  
+        return dispatch({type: FETCH_ALL, payload: data});
+    } catch (error) {
+        console.log(error.message);
+    }
+
+}
+
+export const createPost = (post) => async (dispatch) => {
+    try {
+        const {data} = await api.createPost(post);
+        dispatch({type: CREATE, payload: data});
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const updatePost = (id, post) => async (dispatch) => {
+    try {
+        const {data} = await api.updatePost(id,post);
+        dispatch({type: UPDATE, payload: data});
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const deletePost = (id) => async (dispatch) => {
+    try {
+        await api.deletePost(id);
+        dispatch({type: DELETE, payload: id});
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const likePost = (id) => async(dispatch) => {
+    try {
+        const {data} = await api.likePost(id);
+        dispatch({type: UPDATE, payload: data});
+    } catch (error) {
+        console.log(error);
+    }
+}
+```
+
+- **Action Creators** - functions that returns actions
+- **action** is just an object that has type and a payload
+- **Redux thunk** allows us to in here specify an additional arrow function (we are dealing with asynchronous logic)
+    - **redux-thunk** is a middleware that allows you to write action creators that return a function instead of an action
+    - **the thunk** can be used to delay the dispatch of an action or to dispatch only if a certain conditon is met
+    - is used mainly for **async calls to api**, that dispatch another action on success/failure
+
+## React Redux data flow:
+
+![https://raw.githubusercontent.com/gregwell/the-facebook/master/images/redux-data-flow.png](https://raw.githubusercontent.com/gregwell/the-facebook/master/images/redux-data-flow.png)
 
 ### TO DO:
 
