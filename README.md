@@ -1231,6 +1231,8 @@ export const likePost = (id) => async(dispatch) => {
 
 ## React Redux data flow:
 
+- click to enlarge
+
 ![https://raw.githubusercontent.com/gregwell/the-facebook/master/images/redux-data-flow.png](https://raw.githubusercontent.com/gregwell/the-facebook/master/images/redux-data-flow.png)
 
 ### TO DO:
