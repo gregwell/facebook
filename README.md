@@ -1,5 +1,12 @@
 # The Facebook - project analysis
 
+- [Motivation](#motivation)
+- [The original structure of the project](#the-original-structure-of-the-project)
+- [Server side](#server-side)
+- [Client side](#client-side)
+- [Redux data flow mind map](#redux-data-flow-mind-map)  
+
+
 # Motivation
 
 The main purpose of this self-development project is to give me an overview of a typical React-powered project and let me see how *the real development process* looks like from scratch. The project uses MERN stack technologies (MongoDB, Express, React, Node.js)
@@ -1229,7 +1236,7 @@ export const likePost = (id) => async(dispatch) => {
     - **the thunk** can be used to delay the dispatch of an action or to dispatch only if a certain conditon is met
     - is used mainly for **async calls to api**, that dispatch another action on success/failure
 
-## React Redux data flow:
+## Redux data flow mind map
 
 - click to enlarge
 
