@@ -1,5 +1,7 @@
 # The Facebook - project analysis
 
+**Created:** 16.01.2021, **last updated:** 22.02.2021
+
 - [Motivation](#motivation)
 - [The original structure of the project](#the-original-structure-of-the-project)
 - [Server side](#server-side)
