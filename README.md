@@ -1,19 +1,23 @@
-# The Facebook - project analysis
+# The Facebook - detailed analysis
 
 **Created:** 16.01.2021, **last updated:** 22.02.2021
 
 - [Motivation](#motivation)
+- [Linked notes](#linked-notes)
 - [The original structure of the project](#the-original-structure-of-the-project)
 - [Server side](#server-side)
 - [Client side](#client-side)
 - [Redux data flow mind map](#redux-data-flow-mind-map)  
 
-
 # Motivation
 
 The main purpose of this self-development project is to give me an overview of a typical React-powered project and let me see how *the real development process* looks like from scratch. The project uses MERN stack technologies (MongoDB, Express, React, Node.js)
 
-I've followed line by line Adrian Hajdin's [tutorial code](https://github.com/adrianhajdin/project_mern_memories), then googled "what is *everything* used for?", opened countless amounts of stackoverflow questions and [took notes](https://github.com/gregwell/university-notes/tree/main/english/javascript). This README file shows my way of thinking **how things are done.**
+I've followed line by line Adrian Hajdin's [tutorial code](https://github.com/adrianhajdin/project_mern_memories), then googled "what is *everything* used for?", opened countless amounts of stackoverflow questions and took notes. This README file shows my way of thinking **how things are done.**
+
+# Linked notes
+- [Javascript](https://github.com/gregwell/university-notes/blob/main/english/javascript/javascript.md)
+- [React](https://github.com/gregwell/university-notes/blob/main/english/javascript/react.md)
 
 # The original structure of the project
 
