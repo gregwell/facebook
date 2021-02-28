@@ -2,6 +2,8 @@
 
 **Created:** 16.01.2021, **last updated:** 22.02.2021
 
+MERN stack (MongoDB, Express, React, Node.js) detailed project analysis and study notes
+
 - [Motivation](#motivation)
 - [Linked notes](#linked-notes)
 - [The original structure of the project](#the-original-structure-of-the-project)
