@@ -12,7 +12,7 @@ MERN stack (MongoDB, Express, React, Node.js) detailed project analysis and stud
 
 - [Motivation](#motivation)
 - [Linked notes](#linked-notes)
-- [The original structure of the project](#the-original-structure-of-the-project)
+- [Project structure](#project-structure)
 - [Server side](#server-side)
 - [Client side](#client-side)
 - [Redux data flow mind map](#redux-data-flow-mind-map)  
@@ -27,7 +27,7 @@ I've followed line by line Adrian Hajdin's [tutorial code](https://github.com/ad
 - [Javascript](https://github.com/gregwell/university-notes/blob/main/english/javascript/javascript.md)
 - [React](https://github.com/gregwell/university-notes/blob/main/english/javascript/react.md)
 
-# The original structure of the project
+# Project structure
 
 ![https://raw.githubusercontent.com/gregwell/the-facebook/master/images/project_structure.png](https://raw.githubusercontent.com/gregwell/the-facebook/master/images/project_structure.png)
 
