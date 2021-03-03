@@ -21,7 +21,7 @@ MERN stack (MongoDB, Express, React, Node.js) detailed project analysis and stud
 
 The main purpose of this self-development project is to give me an overview of a typical full-stack (MERN-stack: MongoDB, Express, React, Node.js) project and let me see how *the real development process* looks like from scratch. I've found that I learn best when I carefully analyze a real example, not by reading pure theory. (I read the theory to understand why was it made this way!)
 
-I've followed line by line Adrian Hajdin's [tutorial code](https://github.com/adrianhajdin/project_mern_memories), then googled "what is *everything* used for?", read tons of documentation, opened countless amounts of stackoverflow questions and took notes. This README file shows my way of thinking **how things are done.**
+I've followed line by line Adrian Hajdin's [tutorial code](https://github.com/adrianhajdin/project_mern_memories), then googled "what is *everything* used for?", read tons of documentation, opened countless amounts of stackoverflow questions and took notes. This 1200+ line README file shows my way of thinking **how things are done.**
 
 # Linked notes
 - [Javascript](https://github.com/gregwell/university-notes/blob/main/english/javascript/javascript.md)
